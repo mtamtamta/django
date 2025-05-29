@@ -1,0 +1,46 @@
+{% extends "edu/base.html" %}
+{% block title %}Я{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Я</h1>
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Поиск по ФИО или email">
+    </div>
+    <div class="col-auto">
+      <select name="order_by" class="form-select">
+        <option value="full_name"  {% if order == 'full_name' %}selected{% endif %}>ФИО ↑</option>
+        <option value="-full_name" {% if order == '-full_name' %}selected{% endif %}>ФИО ↓</option>
+        <option value="email"      {% if order == 'email' %}selected{% endif %}>Email ↑</option>
+        <option value="-email"     {% if order == '-email' %}selected{% endif %}>Email ↓</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary">Применить</button>
+      <a href="{% url 'sitepages:me_list' %}" class="btn btn-outline-secondary">Сбросить</a>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'sitepages:me_create' %}" class="btn btn-success">Добавить запись</a>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead>
+      <tr><th>ФИО</th><th>Фото</th><th>Email</th><th>Телефон</th><th>Резюме</th></tr>
+    </thead>
+    <tbody>
+      {% for i in items %}
+      <tr>
+        <td>{{ i.full_name }}</td>
+        <td><img src="{{ i.photo.url }}" height="50" alt="Фото"></td>
+        <td>{{ i.email }}</td>
+        <td>{{ i.phone }}</td>
+        <td>{{ i.resume|truncatechars:50 }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">Нет записей</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

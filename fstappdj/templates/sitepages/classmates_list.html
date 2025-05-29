@@ -1,0 +1,41 @@
+{% extends "edu/base.html" %}
+{% block title %}Сокурсники{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Мои сокурсники</h1>
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Поиск">
+    </div>
+    <div class="col-auto">
+      <select name="order_by" class="form-select">
+        <option value="full_name"  {% if order == 'full_name' %}selected{% endif %}>ФИО ↑</option>
+        <option value="-full_name" {% if order == '-full_name' %}selected{% endif %}>ФИО ↓</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button class="btn btn-outline-primary">Применить</button>
+      <a href="{% url 'sitepages:classmates_list' %}" class="btn btn-outline-secondary">Сбросить</a>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'sitepages:classmate_create' %}" class="btn btn-success">Добавить</a>
+    </div>
+  </form>
+
+  <table class="table table-striped">
+    <thead><tr><th>ФИО</th><th>Фото</th><th>Email</th><th>Телефон</th></tr></thead>
+    <tbody>
+      {% for c in items %}
+      <tr>
+        <td>{{ c.full_name }}</td>
+        <td><img src="{{ c.photo.url }}" height="50"></td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.phone }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">Нет записей</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

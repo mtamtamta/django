@@ -1,0 +1,67 @@
+{% extends "edu/base.html" %}
+{% block title %}Список записей{% endblock %}
+
+{% block content %}
+  <h1 class="mb-4">Все записи</h1>
+
+  <form method="get" class="row g-2 mb-3">
+    <div class="col-auto">
+      <input
+        type="text"
+        name="program_name"
+        value="{{ program_filter }}"
+        class="form-control"
+        placeholder="Фильтр по программе">
+    </div>
+    <div class="col-auto">
+      <select name="order_by" class="form-select">
+        <option value="">Сортировка</option>
+        <option value="full_name"  {% if order_by == 'full_name' %}selected{% endif %}>ФИО ↑</option>
+        <option value="-full_name" {% if order_by == '-full_name' %}selected{% endif %}>ФИО ↓</option>
+        <option value="year_of_admission"  {% if order_by == 'year_of_admission' %}selected{% endif %}>Год ↑</option>
+        <option value="-year_of_admission" {% if order_by == '-year_of_admission' %}selected{% endif %}>Год ↓</option>
+        <option value="gpa"  {% if order_by == 'gpa' %}selected{% endif %}>GPA ↑</option>
+        <option value="-gpa" {% if order_by == '-gpa' %}selected{% endif %}>GPA ↓</option>
+      </select>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-outline-primary">Применить</button>
+      <a href="{% url 'edu:entry_list' %}" class="btn btn-outline-secondary">Сбросить</a>
+    </div>
+    <div class="col text-end">
+      <a href="{% url 'edu:entry_create' %}" class="btn btn-success">Добавить запись</a>
+    </div>
+  </form>
+
+  <table class="table table-striped table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>ФИО</th><th>Программа</th><th>Год</th><th>GPA</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in entries %}
+        <tr>
+          <td>{{ e.full_name }}</td>
+          <td>{{ e.program_name }}</td>
+          <td>{{ e.year_of_admission }}</td>
+          <td>{{ e.gpa }}</td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="4">Нет записей</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="mt-5">Статистика по GPA</h2>
+  <table class="table table-sm">
+    <tbody>
+      <tr><th>Всего</th>            <td>{{ stats.total }}</td></tr>
+      <tr><th>Сумма</th>            <td>{{ stats.sum_gpa }}</td></tr>
+      <tr><th>Средний</th>          <td>{{ stats.avg_gpa|floatformat:2 }}</td></tr>
+      <tr><th>Минимальный</th>      <td>{{ stats.min_gpa }}</td></tr>
+      <tr><th>Максимальный</th>     <td>{{ stats.max_gpa }}</td></tr>
+      <tr><th>StdDev</th>           <td>{{ stats.stddev_gpa|floatformat:2 }}</td></tr>
+    </tbody>
+  </table>
+{% endblock %}
